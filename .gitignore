@@ -2,9 +2,4 @@
 active/*/plans/
 archive/*/plans/
 
-# 保留模板仓中的计划模板追踪能力。
-!_templates/
-!_templates/**/plans/
-!_templates/**/plans/**
-
 .DS_Store
