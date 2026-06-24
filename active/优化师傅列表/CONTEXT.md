@@ -8,7 +8,7 @@
 - 需求分级：暂定 L2 标准需求，待确认是否涉及接口、权限、SQL、配置或多服务后调整。
 - 涉及应用：
   - 待确认：师傅列表所在前端应用。
-  - 待确认：师傅列表数据来源后端服务。
+  - 候选后端：`worker-center`，GitNexus 已索引路径 `/Users/pis0sion/Pis0sion/PhpCode/WorkerApp/20260224`。
 - 建议功能分支：`feature/pis0sion/optimize-worker-list`
 
 ## 范围边界
@@ -30,12 +30,15 @@
 | 日期 | 阶段 | 进展 | 证据 |
 | --- | --- | --- | --- |
 | 2026-06-24 | 需求启动 | 初始化需求资料仓并创建“优化师傅列表”五件套骨架。 | `task/demands/active/优化师傅列表/` |
+| 2026-06-24 | 现状复核 | 通过 GitNexus 初步定位候选后端 `worker-center`，疑似通用师傅列表链路为 `Workers/MemberController::list -> MemberLogic::getList -> MemberLogic::getListByWhereCondition`。 | GitNexus repo `worker-center` 查询结果 |
 
 ## 关键结论
 
 - 需求资料仓已挂载在主仓 `task/demands/`，具体需求资料只在该独立仓追踪。
 - 需求实例中的 `plans/` 默认不进入 Git；模板计划文件仍可追踪。
-- 当前只有需求标题，具体优化范围、涉及端、服务、接口和验收标准待确认。
+- 当前只有需求标题，具体优化范围、涉及端、接口和验收标准待确认。
+- GitNexus 辅助结论：`MemberLogic::getListByWhereCondition` 会组装师傅列表字段，并批量补充保证金、停接标记、预警规则、匠铭管控、推荐人和推荐人数等信息。
+- GitNexus 影响面提示：直接改 `MemberLogic::getListByWhereCondition` 会影响 `Workers/MemberController::list`、`Providers/TransferOrderController::getWorkerList` 和 `MemberLogic::assertPaginatorAbilityList` 等调用，不能在目标不清时直接改共享方法。
 
 ## 待办与阻塞
 
@@ -43,7 +46,7 @@
 | --- | --- | --- | --- | --- |
 | P0 | 确认师傅列表所在产品入口和前端应用 | 产品/开发 | 待处理 | 需要明确是管理端、客户端还是其他后台页面。 |
 | P0 | 确认本次“优化”的具体目标 | 产品/开发 | 待处理 | 例如字段展示、筛选项、排序、性能、权限、分页、导出或交互。 |
-| P0 | 确认涉及后端服务与接口 | 开发 | 待处理 | 确认后再做 GitNexus 影响面和分支门禁。 |
+| P0 | 确认是否使用 `worker-center` 作为目标后端仓 | 开发 | 待处理 | 当前仅有 GitNexus 索引辅助结论，还需确认实际代码工作区和分支。 |
 | P1 | 补齐测试数据和验收标准 | 测试/开发 | 待处理 | 需要可执行的 P0/P1 和回归场景。 |
 
 ## 续期恢复提示

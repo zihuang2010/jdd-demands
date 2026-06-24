@@ -14,15 +14,15 @@
 
 | 复核项 | 当前实现 | 本次处理方式 |
 | --- | --- | --- |
-| 入口 | 待确认师傅列表页面、菜单和角色路径 | 复用现有入口，按确认范围优化。 |
-| 数据模型 | 待确认师傅主表、认证/状态/服务区域等关联表 | 优先只读查询优化；不默认改表。 |
+| 入口 | GitNexus 初步命中 `worker-center` 的 `Workers/MemberController::list`，前端页面、菜单和角色路径待确认 | 复用现有入口，按确认范围优化。 |
+| 数据模型 | GitNexus 初步显示列表字段来自 `member`、`member_services_grade`、`tmall_members`、`member_label` 等，实际表结构待代码和数据库规范复核 | 优先只读查询优化；不默认改表。 |
 | 幂等与补偿 | 列表查询暂不涉及 | 如新增写操作或导出任务，再补幂等与补偿设计。 |
 | 通知或事件 | 暂未发现需求涉及 | 不默认新增事件或消息。 |
-| 调用链 | 待确认页面到后端查询接口链路 | 先复核现有调用链，再决定是否扩展接口。 |
+| 调用链 | 候选链路：`Workers/MemberController::list -> MemberLogic::getList -> MemberLogic::getListByWhereCondition -> MemberRepository::getMemberList` | 先复核实际代码与路由，再决定是否扩展接口。 |
 
 ## 3. 总体方案
 
-- 涉及应用：待确认前端应用、待确认后端服务。
+- 涉及应用：待确认前端应用、候选后端 `worker-center`。
 - 关键流程：
   1. 用户进入师傅列表页面。
   2. 页面按现有权限加载筛选项和列表数据。
@@ -36,7 +36,8 @@
 
 | 接口 | 方法 | 角色路径 | 鉴权边界 | 说明 |
 | --- | --- | --- | --- | --- |
-| 待复核师傅列表接口 | GET/POST | 待确认 | 沿用现有角色与数据权限 | 需要先定位现有列表接口，再决定是否新增字段或筛选项。 |
+| 待复核 `Workers/MemberController::list` | 待确认 | 待确认 | 沿用现有角色与数据权限 | GitNexus 初步命中通用师傅列表入口，需用实际代码确认路由、参数和权限。 |
+| `Providers/TransferOrderController::getWorkerList` | 待确认 | 待确认 | 沿用现有角色与数据权限 | GitNexus impact 显示可能复用列表逻辑；若改共享方法需回归该入口。 |
 
 ### 请求示例
 
