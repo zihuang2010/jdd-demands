@@ -1,0 +1,10 @@
+# 需求实例中的执行计划由本地生成和迭代，不进入需求资料仓。
+active/*/plans/
+archive/*/plans/
+
+# 保留模板仓中的计划模板追踪能力。
+!_templates/
+!_templates/**/plans/
+!_templates/**/plans/**
+
+.DS_Store
